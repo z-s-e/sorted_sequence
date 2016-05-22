@@ -33,7 +33,7 @@
 namespace sorted_sequence {
 inline int key(const QHash<int, int>::iterator &it)
 {
-    return it.value();
+    return it.key();
 }
 
 inline int& value_ref(QHash<int, int>::iterator &it)
@@ -49,12 +49,12 @@ inline int& value_ref(QHash<int, int>::iterator &it)
 #include <unordered_map>
 
 namespace sorted_sequence {
-inline ptrdiff_t key(const std::unordered_map<std::ptrdiff_t, ptrdiff_t>::iterator &it)
+inline std::ptrdiff_t key(const std::unordered_map<std::ptrdiff_t, ptrdiff_t>::iterator &it)
 {
     return it->first;
 }
 
-inline ptrdiff_t& value_ref(typename std::unordered_map<ptrdiff_t, ptrdiff_t>::iterator &it)
+inline std::ptrdiff_t& value_ref(typename std::unordered_map<ptrdiff_t, ptrdiff_t>::iterator &it)
 {
     return it->second;
 }
@@ -80,7 +80,7 @@ struct default_sort_algorithm {
 };
 
 
-// default (std::less wrapper) + lambda wrapper Compare
+// default (std::less wrapper) + function wrapper Compare
 // ----------------------------------------------------------------------------
 
 template< typename T >
@@ -100,17 +100,17 @@ bool operator!=(const default_compare<T>&, const default_compare<T>&)
 
 
 template< typename T >
-class lambda_compare {
+class function_compare {
 public:
     typedef std::function<bool(const T&, const T&)> Func;
 
-    explicit lambda_compare(const Func& f)
+    explicit function_compare(const Func& f)
         : m_f(std::make_shared<const Func>(f))
     {
         assert(*m_f);
     }
 
-    explicit lambda_compare(Func&& f)
+    explicit function_compare(Func&& f)
         : m_f(std::make_shared<const Func>(std::move(f)))
     {
         assert(*m_f);
@@ -123,12 +123,12 @@ public:
         return (*m_f)(x, y);
     }
 
-    bool operator==(const lambda_compare<T>& other) const
+    bool operator==(const function_compare<T>& other) const
     {
         return m_f == other.m_f;
     }
 
-    bool operator!=(const lambda_compare<T>& other) const
+    bool operator!=(const function_compare<T>& other) const
     {
         return !operator==(other);
     }

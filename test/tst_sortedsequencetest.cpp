@@ -41,8 +41,8 @@ template class sorted_sequence::adaptor< QList<int>, MyCompare<int> >;
 using TestAdaptor = sorted_sequence::adaptor< QList<int> >;
 using TestAdaptor2 = sorted_sequence::adaptor< QList<int>, MyCompare<int> >;
 
-using TestLambdaCmp = sorted_sequence::lambda_compare<int>;
-template class sorted_sequence::lambda_compare<int>;
+using TestLambdaCmp = sorted_sequence::function_compare<int>;
+template class sorted_sequence::function_compare<int>;
 
 using TestAdaptor3 = sorted_sequence::adaptor< std::vector<int>, TestLambdaCmp >;
 
